@@ -76,7 +76,7 @@ require([
 			  var markerSymbol = new SimpleMarkerSymbol({
 				color: [226, 119, 40],
 				outline: { 
-				  color: [255, 255, 255],
+				  color: [255, 255, 254],
 				  width: 1
 				}
 			  });
@@ -90,8 +90,8 @@ require([
 			  
 			  // Create popup template
 			  var popupTemplate = {
-				title: "{Name}",
-				content: "I live in <b>{Park}</b> in the city of <b>{City}</b>."
+				title: "",
+				content: "Meu ponto é: " + astralMap.latitude + " Latitude e " + astralMap.longitude + " Longitude",
 			  };
 
 			  // Create a graphic and add the geometry and symbol to it
@@ -150,6 +150,7 @@ require([
 MapManager.prototype.reload = function()
 {
 	this.ui.view.center = [this.astralMap.longitude, this.astralMap.latitude];
+	this.ui.view.zoom = 12;
 	
 	this.ui.view.graphics.removeAll();
 	
