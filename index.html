@@ -1,273 +1,620 @@
+<!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Mapa do Espaço Local</title>
-<style>
-html, body, #mapPlaceholder {
-	padding: 0;
-	margin: 0;
-	height: 100%;
-	width: 100%;
-}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Mapa do Espaço Local</title>
 
-body {
-	font-family: "Lato", sans-serif;
-}
+  <!-- Calcite Bootstrap -->
+  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.8.css">
 
-.header {
-    background-color: #777;
-	width: 100%;
-    text-align: center;
-    font-size: 35px;
-    color: white;
-	padding: 25px 0px 25px 0px;
-}
+  <!-- Calcite Maps -->
+  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-arcgis-4.x.min-v0.8.css">
 
-.nav {
-    float: left;
-    width: 25%;
-    height: 100%;
-    background: #111;
-    padding: 0;
-	padding-top: 0px;
-}
-
-.nav label {
-	padding: 6px 0px 6px 0px;
-	text-decoration: none;
-	font-size: 18px;
-	color: #D3D3D3;
-	display: block;
-}
-
-.nav a:hover {
-	color: #f1f1f1;
-	background-color: yellow;
-}
-
-.article {
-    float: left;
-    padding: 0;
-    width: 75%;
-    background-color: #f1f1f1;
-    height: 100%;
-}
-
-<!-- .sidenav {
-	height: 100%;
-	width: 25%;
-    position: fixed;
-	z-index: 1;
-	top: 0;
-	left: 0;
-	background-color: #111;
-	overflow-x: hidden;
-	padding-top: 20px;
-}
-
-.sidenav label {
-	padding: 6px 8px 6px 16px;
-	text-decoration: none;
-	font-size: 25px;
-	color: #D3D3D3;
-	display: block;
-}
-
-.sidenav a:hover {
-	color: #f1f1f1;
-}
-
-.main {
-	margin-left: 260px; /* Same as the width of the sidenav */
-	font-size: 28px; /* Increased text to enable scrolling */
-}
-
-@media screen and (max-height: 450px) {
-	.sidenav {padding-top: 15px;}
-	.sidenav a {font-size: 18px;}
-} -->
-
-article, header, section, nav {
-    display: block;
-}
-
-</style>
-	<link rel="stylesheet" href="https://js.arcgis.com/4.10/esri/css/main.css">
-	<script src="https://js.arcgis.com/4.10/"></script>
-	<script src="astralLib.js"></script>
-	<script src="astralMap.js"></script>
-	<!-- <script type="text/javascript"></script> -->
-	<script type="text/javascript">
-		var astralMap = new AstralMap();
-		
-		var mapManager = new MapManager("mapPlaceholder", astralMap);
-		
-		function reload() {
-			astralMap.latitude = parseFloat(document.getElementById("latitude").value);
-			astralMap.longitude = parseFloat(document.getElementById("longitude").value);
-			
-			checkFeature(astralMap.moon, "enable_moon", "angle_moon");
-			checkFeature(astralMap.sun, "enable_sun", "angle_sun");
-			checkFeature(astralMap.mercury, "enable_mercury", "angle_mercury");
-			checkFeature(astralMap.venus, "enable_venus", "angle_venus");
-			checkFeature(astralMap.mars, "enable_mars", "angle_mars");
-			checkFeature(astralMap.jupiter, "enable_jupiter", "angle_jupiter");
-			checkFeature(astralMap.saturn, "enable_saturn", "angle_saturn");
-			checkFeature(astralMap.uranus, "enable_uranus", "angle_uranus");
-			checkFeature(astralMap.neptune, "enable_neptune", "angle_neptune");
-			checkFeature(astralMap.pluto, "enable_pluto", "angle_pluto");
-			checkFeature(astralMap.lunarnode, "enable_lunarnode", "angle_lunarnode");
-			
-			mapManager.reload();
-		}
-		
-		function checkFeature(feature, checkinput, textinput) {
-			if(document.getElementById(checkinput).checked) {
-				feature.enable(parseFloat(document.getElementById(textinput).value));
-			} else {
-				feature.disable();
-			}
-		}
-		
-		function handleEnablers(checkbox, textinput) {
-			if(checkbox.checked){
-				document.getElementById(textinput).removeAttribute("disabled");
-			} else {
-				document.getElementById(textinput).setAttribute("disabled", "disabled");
-			}
-	   }
-	   
-		setTimeout(reload, 500);
-	</script>
-</head>
-<body>
-	<header class="header">
-		<label style="text-align:center">Mapa do Espaço Local</label>
-	</header>
+  <!-- ArcGIS JS 4 -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.10/esri/css/main.css">
+  
+  <!-- CheckBox Customize -->
+  <link rel="stylesheet" href="CheckBox.css">
+  
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
 	
-	<section class="section">
-		<nav class="nav">
-			<p style="color:white">
-				<center>
-					<label style="text-align:center">Latitude</label>
-					<input type="number" id="latitude" value="-22.9035"></input>
-					<label style="text-align:center">Longitude</label>
-					<input type="number" id="longitude" value="-43.2096"></input>
-				</center>
-			</p>
-			
-			<p>
-				<center style="color:white">
-					<label style="text-align:center;color:#D3D3D3">SOL</label>
-					<input type="checkbox" id="enable_sun" onchange="handleEnablers(this, 'angle_sun')"></input>
-					<input type="number" id="angle_sun" value="0" disabled="disabled"></input>
-					º (Graus)
-				</center>
-			</p>
-			
-			<p>
-				<center style="color:white">
-					<label style="text-align:center;color:#D3D3D3">LUA</label>
-					<input type="checkbox" id="enable_moon" onchange="handleEnablers(this, 'angle_moon')"></input>
-					<input type="number" id="angle_moon" value="10" disabled="disabled"></input>
-					º (Graus)
-				</center>
-			</p>
-			
-			<p>
-				<center style="color:white">
-					<label style="text-align:center;color:#D3D3D3">MERCÚRIO</label>
-					<input type="checkbox" id="enable_mercury" onchange="handleEnablers(this, 'angle_mercury')"></input>
-					<input type="number" id="angle_mercury" value="20" disabled="disabled"></input>
-					º (Graus)
-				</center>
-			</p>		
-			
-			<p>
-				<center style="color:white">
-					<label style="text-align:center;color:#D3D3D3">VÊNUS</label>
-					<input type="checkbox" id="enable_venus" onchange="handleEnablers(this, 'angle_venus')"></input>
-					<input type="number" id="angle_venus" value="30" disabled="disabled"></input>
-					º (Graus)
-				</center>
-			</p>					
-			
-			<p>
-				<center style="color:white">
-					<label style="text-align:center;color:#D3D3D3">MARTE</label>
-					<input type="checkbox" id="enable_mars" onchange="handleEnablers(this, 'angle_mars')"></input>
-					<input type="number" id="angle_mars" value="40" disabled="disabled"></input>
-					º (Graus)
-				</center>
-			</p>				
+	.LocalSpaceConfig {
+	  margin-top: 0px;
+	  margin-bottom: 0px;
+	  padding: 0;
+	  width: 320px;
+	  overflow: hidden;
+	}
+	
+	.LocalSpaceConfig label{
+		padding-left: 2px;
+		white-space: nowrap;
+		text-align: left;
+	}
 
-			<p>
-				<center style="color:white">
-					<label style="text-align:center;color:#D3D3D3">JÚPITER</label>
-					<input type="checkbox" id="enable_jupiter" onchange="handleEnablers(this, 'angle_jupiter')"></input>
-					<input type="number" id="angle_jupiter" value="50" disabled="disabled"></input>
-					º (Graus)
-				</center>
-			</p>				
-			
-			<p>
-				<center style="color:white">
-					<label style="text-align:center;color:#D3D3D3">SATURNO</label>
-					<input type="checkbox" id="enable_saturn" onchange="handleEnablers(this, 'angle_saturn')"></input>
-					<input type="number" id="angle_saturn" value="60" disabled="disabled"></input>
-					º (Graus)
-				</center>
-			</p>	
-			
-			<p>
-				<center style="color:white">
-					<label style="text-align:center;color:#D3D3D3">URANO</label>
-					<input type="checkbox" id="enable_uranus" onchange="handleEnablers(this, 'angle_uranus')"></input>
-					<input type="number" id="angle_uranus" value="70" disabled="disabled"></input>
-					º (Graus)
-				</center>
-			</p>	
-			
-			<p>
-				<center style="color:white">
-					<label style="text-align:center;color:#D3D3D3">NETUNO</label>
-					<input type="checkbox" id="enable_neptune" onchange="handleEnablers(this, 'angle_neptune')"></input>
-					<input type="number" id="angle_neptune" value="80" disabled="disabled"></input>
-					º (Graus)
-				</center>
-			</p>			
-			
-			<p>
-				<center style="color:white">
-					<label style="text-align:center;color:#D3D3D3">PLUTÃO</label>
-					<input type="checkbox" id="enable_pluto" onchange="handleEnablers(this, 'angle_pluto')"></input>
-					<input type="number" id="angle_pluto" value="90" disabled="disabled"></input>
-					º (Graus)
-				</center>
-			</p>	
-			
-			<p>
-				<center style="color:white">
-					<label style="text-align:center;color:#D3D3D3">NODOS LUNARES</label>
-					<input type="checkbox" id="enable_lunarnode" onchange="handleEnablers(this, 'angle_lunarnode')"></input>
-					<input type="number" id="angle_lunarnode" value="100" disabled="disabled"></input>
-					º (Graus)
-				</center>
-			</p>	
-			
-			
-			<center>
-				<button onclick="reload()">Reload</button>
-			</center>
-		</nav>
-		
-		<article class="article">
-			<p id="mapPlaceholder"></p>
-		</article>
-		
-	</section>
+	.LocalSpaceConfig input{
+		margin-top: 0px;
+		margin-bottom: 0px;	
+		padding: 0;
+	}
 
+
+
+	.calcite-panels .panel-body .panel-customize{
+		font-size:13px;
+		margin-top:10px;
+		margin-bottom:10px;
+		height:28px;
+		padding:0px 0px;
+		width:320px;
+		}	
+	
+	/* Centraliza texto na vertical (se atlterar o Heigth do Panel, tem que recalcular o top e o bottom) */
+	.calcite-panels .panel-body .panel-customize .Absolute-Vertical-Text {
+		margin: auto;
+		position: absolute;
+		top: 6.2px; bottom: 6.2px;
+	}
+
+	.calcite-panels .panel-body .panel-customize .Absolute-Center {
+		margin: auto;
+		position: absolute;
+		top: 6.2px; bottom: 6.2px; left: 6.2px; right: 6.2px;
+	}
+	
+	.calcite-panels .panel-body .panel-customize input {
+			font-size:13px;
+			text-indent: 5px;
+			}
+			
+	/* Retira o Scroll do input type number */
+	.calcite-panels .panel-body .panel-customize [type="number"]::-webkit-outer-spin-button,
+			input[type="number"]::-webkit-inner-spin-button {
+				-webkit-appearance: none;
+				margin: 0;
+			}			
+						
+	.calcite-panels .panel-body .panel-customize input[type="number"] {
+			-moz-appearance: textfield;
+			}			
+		
+			
+	.calcite-panels .panel-body .panel-customize .form-control{
+			height:28px;
+			padding:0px 0px;
+			border-radius: 8px;
+			box-sizing: border-box;
+			width: 100%;
+		}
+	
+	.calcite-panels .panel-body .panel-customize .col-xs-1-cust{
+			float: left;
+			position:relative;
+			min-height:1px;
+			padding-top:0px;
+			padding-left:0px;
+			padding-right:0px;
+			width:10%;
+			height: inherit;
+			text-align: left;
+			line-height: 1.2;
+			}
+		
+	.calcite-panels .panel-body .panel-customize .col-xs-4-cust{
+			float: left;
+			position:relative;
+			min-height:1px;
+			padding-top:0px;
+			padding-left:0px;
+			padding-right:0px;
+			width:40%;
+			height: inherit;
+			text-align: left;
+			line-height: 1.2;
+			}
+		
+	.calcite-panels .panel-body .panel-customize .col-xs-5-cust{
+			float: right;
+			position:relative;
+			min-height:1px;
+			padding-left:0px;
+			padding-right:10px;
+			width:50%;
+			}
+	
+  </style>
+
+</head>
+
+<body class="calcite-maps calcite-nav-top">
+
+  <!-- Navbar -->
+
+  <nav class="navbar calcite-navbar navbar-fixed-top calcite-text-light calcite-bg-dark">
+    <!-- Menu -->
+    <div class="dropdown calcite-dropdown calcite-text-dark calcite-bg-light"
+      role="presentation">
+      <a class="dropdown-toggle" role="button" aria-haspopup="true"
+        aria-expanded="false">
+        <div class="calcite-dropdown-toggle">
+          <span class="sr-only">Toggle dropdown menu</span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </a>
+      <ul class="dropdown-menu">
+        <li class="active"><a class="hidden-md hidden-lg" href="#mapTab" aria-controls="mapTab" role="tab" data-toggle="tab"> Map</a></li>
+		
+        <li><a role="button" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>	
+
+		<li><a role="button" data-target="#panelLocalSpace" aria-haspopup="true"><span class="glyphicon glyphicon-cog"></span> Local Space</a></li>		
+			
+        <li><a role="button" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps</a></li>
+			  
+		<li><a role="button" data-target="#panelLegend" aria-haspopup="true"><span class="glyphicon glyphicon-list-alt"></span> Legend</a></li>			  
+			  
+        <li><a role="button" data-target="#panelSettings" aria-haspopup="true"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+			  
+        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-fullscreen"></span> Full Map</a></li>
+      </ul>
+    </div>
+    <!-- Title -->
+    <div class="calcite-title calcite-overflow-hidden">
+      <span class="calcite-title-main">Mapa do Espaço Local</span>
+      <span class="calcite-title-divider hidden-xs"></span>
+      <span class="calcite-title-sub hidden-xs"></span>
+    </div>
+    <!-- Nav -->
+    <ul class="nav navbar-nav calcite-nav">
+      <li class="active"><a id="mapNav" class="hidden-xs hidden-sm" href="#mapTab"
+          aria-controls="mapTab" aria-expanded="true" role="tab" data-toggle="tab"
+          data-tooltip="tip" title="2D View" data-placement="bottom">Map</a></li>
+        <div class="calcite-navbar-search calcite-search-expander">
+          <div id="searchWidgetDiv"></div>
+        </div>
+      </li>
+    </ul>
+  </nav>
+  <!--/.calcite-navbar -->
+
+  <!-- Map  -->
+
+  <div class="calcite-map calcite-map-absolute">
+    <div id="tabContainer" class="tab-content">
+      <div id="mapTab" class="tab-pane fade in active" role="tabpanel">
+        <div id="mapViewDiv"></div>
+      </div>
+    </div>
+  </div>
+  <!-- /.calcite-map -->
+
+  <!-- Panels -->
+
+  <div class="calcite-panels calcite-panels-right calcite-text-light calcite-bg-dark panel-group">
+
+    <!-- Panel - Info -->
+
+    <div id="panelInfo" class="panel collapse in">
+      <div id="headingInfo" class="panel-heading" role="tab">
+        <div class="panel-title">
+          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseInfo"  aria-expanded="true" aria-controls="collapseInfo">
+			<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+			<span class="panel-label">About</span></a> 
+          <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelInfo"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
+        </div>
+      </div>
+      <div id="collapseInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingInfo">
+        <div class="panel-body" align="justify">
+          <p>Este aplicativo deve ser utilizado para o estudo do funcionamento do Mapa do Horizonte na cidade.</p>
+		  <p>Devem ser informados os dados de Latitude e Longitude do local a ser estudado, assim como as direções dos planetas obtidos pelo Mapa do Horizonte em softwares de Astrologia.</p>
+		  <p>Os ângulos devem ser considerados no sentido horário, sendo o Norte como 0º e o Leste como 90º.</p>
+		  
+		  <p style="text-align:center"><img src="Images\compass-wind-rose-bardian.png" width="217" height="196"></p>
+		  
+		  <p>Para inserir os dados entre em "Local Space" no menu lateral esquerdo.</p>
+		  <p>Desenvolvido por Hugo Neves e Paulo Neves.</p>
+        </div>
+     </div>
+    </div>
+	
+	<!-- Panel - Local Space -->
+
+    <div id="panelLocalSpace" class="panel collapse">
+      <div id="headingLocalSpace" class="panel-heading" role="tab">
+        <div class="panel-title">
+          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseLocalSpace" aria-expanded="false" aria-controls="collapseLocalSpace">
+			<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+			<span class="panel-label">Local Space Configuration</span></a> 
+          <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelLocalSpace"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a> 
+        </div>
+      </div>
+      <div id="collapseLocalSpace" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingLocalSpace">
+	
+		<div class="panel-body">
+			<div class="panel-customize">
+				<div class="col-xs-4-cust">
+					<label class="Absolute-Vertical-Text">Latitude</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="latitude" class="form-control" value="-22.9035"></input>
+				</div>				
+			</div>
+			
+			<div class="panel-customize">
+				<div class="col-xs-4-cust">
+					<label class="Absolute-Vertical-Text">Longitude</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="longitude" class="form-control" value="-43.2096"></input>
+				</div>
+			</div>			
+		
+			<div class="panel-customize">
+				<div class="col-xs-1-cust">
+					<input type="checkbox" id="enable_sun" onchange="handleEnablers(this, 'angle_sun')" /></input>
+					<label for="enable_sun"></label>
+				</div>
+				<div class="col-xs-4-cust">
+					<label for="enable_sun" class="Absolute-Vertical-Text">SOL</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="angle_sun" class="form-control" placeholder="0,00000000º" disabled="disabled">
+				</div>
+			</div>
+			
+			<div class="panel-customize">
+				<div class="col-xs-1-cust">
+					<input type="checkbox" id="enable_moon" onchange="handleEnablers(this, 'angle_moon')" /></input>
+					<label for="enable_moon"></label>
+				</div>
+				<div class="col-xs-4-cust">
+					<label for="enable_moon" class="Absolute-Vertical-Text">LUA</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="angle_moon" class="form-control" placeholder="0,00000000º" disabled="disabled">
+				</div>
+			</div>
+			
+			<div class="panel-customize">
+				<div class="col-xs-1-cust">
+					<input type="checkbox" id="enable_mercury" onchange="handleEnablers(this, 'angle_mercury')" /></input>
+					<label for="enable_mercury"></label>
+				</div>
+				<div class="col-xs-4-cust">
+					<label for="enable_mercury" class="Absolute-Vertical-Text">MERCÚRIO</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="angle_mercury" class="form-control" placeholder="0,00000000º" disabled="disabled">
+				</div>
+			</div>
+			
+			<div class="panel-customize">
+				<div class="col-xs-1-cust">
+					<input type="checkbox" id="enable_venus" onchange="handleEnablers(this, 'angle_venus')" /></input>
+					<label for="enable_venus"></label>
+				</div>
+				<div class="col-xs-4-cust">
+					<label for="enable_venus" class="Absolute-Vertical-Text">VÊNUS</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="angle_venus" class="form-control" placeholder="0,00000000º" disabled="disabled">
+				</div>
+			</div>
+
+			<div class="panel-customize">
+				<div class="col-xs-1-cust">
+					<input type="checkbox" id="enable_mars" onchange="handleEnablers(this, 'angle_mars')" /></input>
+					<label for="enable_mars"></label>
+				</div>
+				<div class="col-xs-4-cust">
+					<label for="enable_mars" class="Absolute-Vertical-Text">MARTE</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="angle_mars" class="form-control" placeholder="0,00000000º" disabled="disabled">
+				</div>
+			</div>
+			
+			<div class="panel-customize">
+				<div class="col-xs-1-cust">
+					<input type="checkbox" id="enable_jupiter" onchange="handleEnablers(this, 'angle_jupiter')" /></input>
+					<label for="enable_jupiter"></label>
+				</div>
+				<div class="col-xs-4-cust">
+					<label for="enable_jupiter" class="Absolute-Vertical-Text">JÚPITER</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="angle_jupiter" class="form-control" placeholder="0,00000000º" disabled="disabled">
+				</div>
+			</div>
+			
+			<div class="panel-customize">
+				<div class="col-xs-1-cust">
+					<input type="checkbox" id="enable_saturn" onchange="handleEnablers(this, 'angle_saturn')" /></input>
+					<label for="enable_saturn"></label>
+				</div>
+				<div class="col-xs-4-cust">
+					<label for="enable_saturn" class="Absolute-Vertical-Text">SATURNO</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="angle_saturn" class="form-control" placeholder="0,00000000º" disabled="disabled">
+				</div>
+			</div>
+			
+			<div class="panel-customize">
+				<div class="col-xs-1-cust">
+					<input type="checkbox" id="enable_uranus" onchange="handleEnablers(this, 'angle_uranus')" /></input>
+					<label for="enable_uranus"></label>
+				</div>
+				<div class="col-xs-4-cust">
+					<label for="enable_uranus" class="Absolute-Vertical-Text">URANO</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="angle_uranus" class="form-control" placeholder="0,00000000º" disabled="disabled">
+				</div>
+			</div>
+			
+			<div class="panel-customize">
+				<div class="col-xs-1-cust">
+					<input type="checkbox" id="enable_neptune" onchange="handleEnablers(this, 'angle_neptune')" /></input>
+					<label for="enable_neptune"></label>
+				</div>
+				<div class="col-xs-4-cust">
+					<label for="enable_neptune" class="Absolute-Vertical-Text">NETUNO</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="angle_neptune" class="form-control" placeholder="0,00000000º" disabled="disabled">
+				</div>
+			</div>
+			
+			<div class="panel-customize">
+				<div class="col-xs-1-cust">
+					<input type="checkbox" id="enable_pluto" onchange="handleEnablers(this, 'angle_pluto')" /></input>
+					<label for="enable_pluto"></label>
+				</div>
+				<div class="col-xs-4-cust">
+					<label for="enable_pluto" class="Absolute-Vertical-Text">PLUTÃO</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="angle_pluto" class="form-control" placeholder="0,00000000º" disabled="disabled">
+				</div>
+			</div>
+			
+			<div class="panel-customize">
+				<div class="col-xs-1-cust">
+					<input type="checkbox" id="enable_lunarnode" onchange="handleEnablers(this, 'angle_lunarnode')" /></input>
+					<label for="enable_lunarnode"></label>
+				</div>
+				<div class="col-xs-4-cust">
+					<label for="enable_lunarnode" class="Absolute-Vertical-Text">NODOS LUNARES</label>
+				</div>
+				<div class="col-xs-5-cust">
+					<input type="number" id="angle_lunarnode" class="form-control" placeholder="0,00000000º" disabled="disabled">
+				</div>
+			</div>
+			
+			<div class="panel-customize">
+			  <div class="col-xs-5-cust">
+				<button id="titleButton" type="button" class="btn btn-primary btn-block" onclick="reload()">Apply</button>
+			  </div>
+			</div>
+
+		</div>
+	  </div>
+	</div>
+
+	<!-- Basemaps Panel -->
+
+    <div id="panelBasemaps" class="panel collapse">
+      <div id="headingBasemaps" class="panel-heading" role="tab">
+        <div class="panel-title">
+          <a class="panel-toggle collapsed" role="button" data-toggle="collapse"
+            href="#collapseBasemaps" aria-expanded="false" aria-controls="collapseBasemaps"><span
+              class="glyphicon glyphicon-th-large" aria-hidden="true"></span><span
+              class="panel-label">Basemaps</span></a>
+          <a class="panel-close" role="button" data-toggle="collapse"
+            data-target="#panelBasemaps"><span class="esri-icon esri-icon-close"
+              aria-hidden="true"></span></a>
+        </div>
+      </div>
+      <div id="collapseBasemaps" class="panel-collapse collapse" role="tabpanel"
+        aria-labelledby="headingBasemaps">
+        <div class="panel-body">
+          <div id="basemapPanelDiv"></div>
+        </div>
+      </div>
+    </div>
+	
+	
+    <!-- Panel - Legend -->
+
+    <div id="panelLegend" class="panel collapse">
+      <div id="headingLegend" class="panel-heading" role="tab">
+        <div class="panel-title">
+          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseLegend" aria-expanded="false" aria-controls="collapseLegend">
+			<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span><span class="panel-label">Legend</span></a> 
+          <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelLegend"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a> 
+        </div>
+      </div>
+      <div id="collapseLegend" class="panel-collapse collapse" role="tabpanel" 
+	    aria-labelledby="headingLegend">
+        <div class="panel-body">            
+          <div id="legendDiv"></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Panel Settings -->
+
+    <div id="panelSettings" class="panel panel-map collapse">
+      <div id="headingSettings" class="panel-heading">
+        <div class="panel-title">
+          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseSettings"
+            data-parent="#panelAccordion" aria-expanded="true" aria-controls="collapseSettings"><span
+              class="glyphicon glyphicon-cog" aria-hidden="true"></span><span
+              class="panel-label">Settings</span></a>
+          <a class="panel-close" role="button" data-toggle="collapse"
+            data-target="#panelSettings"><span class="esri-icon esri-icon-close"
+              aria-hidden="true"></span></a>
+        </div>
+      </div>
+      <div id="collapseSettings" class="panel-collapse collapse" role="tabpanel"
+        aria-labelledby="headingSettings">
+        <div class="panel-body">
+          <div class="form-horizontal">
+
+            <!-- Theme -->
+
+            <div class="form-group">
+              <label for="settingsTheme" class="col-xs-3 control-label">Theme</label>
+              <div class="col-xs-9">
+                <select id="settingsTheme" class="form-control">
+                  <option value="calcite-dark" data-textcolor="calcite-text-light"
+                    data-bgcolor="calcite-bg-dark" selected>Calcite Dark</option>
+                  <option value="calcite-light" data-textcolor="calcite-text-dark"
+                    data-bgcolor="calcite-bg-light">Calcte Light</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Color -->
+
+            <div class="form-group">
+              <label for="settingsColor" class="col-xs-3 control-label">Color</label>
+              <div class="col-xs-9">
+                <select id="settingsColor" class="form-control">
+                  <option value="" data-theme="calcite-theme-light">Calcite
+                    Default</option>
+                  <option value="calcite-bgcolor-dark-blue" data-textcolor="calcite-text-light"
+                    data-bgcolor="calcite-bg-custom">Calcite Dark Blue</option>
+                  <option value="calcite-bgcolor-dark-green" data-textcolor="calcite-text-light"
+                    data-bgcolor="calcite-bg-custom">Calcite Dark Green</option>
+                  <option value="calcite-bgcolor-dark-brown" data-textcolor="calcite-text-light"
+                    data-bgcolor="calcite-bg-custom">Calcite Dark Brown
+                  </option>
+                  <option value="calcite-bgcolor-dark-red" data-textcolor="calcite-text-light"
+                    data-bgcolor="calcite-bg-custom">Calcite Dark Red</option>
+                  <option value="calcite-bgcolor-darkest-grey" data-textcolor="calcite-text-light"
+                    data-bgcolor="calcite-bg-custom">Calcite Darkest Grey</option>
+                  <option value="calcite-bgcolor-lightest-grey" data-textcolor="calcite-text-dark"
+                    data-bgcolor="calcite-bg-custom">Calcite Lightest Grey</option>
+                  <option value="calcite-bgcolor-blue-75" data-textcolor="calcite-text-light"
+                    data-bgcolor="calcite-bg-custom">Calcite Blue 75%</option>
+                  <option value="calcite-bgcolor-black-75" data-textcolor="calcite-text-light"
+                    data-bgcolor="calcite-bg-custom">Calcite Black 75%</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Widgets -->
+
+            <div class="form-group">
+              <label for="settingsWidgets" class="col-xs-3 control-label">Widgets</label>
+              <div class="col-xs-9">
+                <select id="settingsWidgets" class="form-control">
+                  <option value="calcite-widgets-dark">Calcite Dark</option>
+                  <option value="calcite-widgets-light" selected>Calcite Light</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Layout -->
+
+            <div class="form-group">
+              <label for="settingsLayout" class="col-xs-3 control-label">Layout</label>
+              <div class="col-xs-9">
+                <select id="settingsLayout" class="form-control">
+                  <option value="calcite-nav-top" data-nav="navbar-fixed-top"
+                    selected>Top</option>
+                  <option value="calcite-nav-bottom" data-nav="navbar-fixed-bottom">Bottom</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.calcite-panels -->
+
+  <script type="text/javascript">
+    var dojoConfig = {
+      packages: [{
+        name: "bootstrap",
+        location: "https://esri.github.io/calcite-maps/dist/vendor/dojo-bootstrap"
+      },
+      {
+        name: "calcite-maps",
+        location: "https://esri.github.io/calcite-maps/dist/js/dojo"
+      }]
+    };
+  </script>
+
+  <!-- ArcGIS JS 4 -->
+  <script src="https://js.arcgis.com/4.10/"></script>
+  
+  <script src="astralMap.js"></script>
+  
+  <script src="astralConfig.js"></script>
+  
+  <script>
+	
+	var astralMap = new AstralMap();
+	
+	var DrawMaps = new DrawMaps("mapViewDiv", astralMap);
+	
+	//var mapManager = new MapManager("mapViewDiv", astralMap);
+	
+	
+	function reload() {
+		astralMap.latitude = parseFloat(document.getElementById("latitude").value);
+		astralMap.longitude = parseFloat(document.getElementById("longitude").value);
+		
+		checkFeature(astralMap.sun, "enable_sun", "angle_sun");
+		checkFeature(astralMap.moon, "enable_moon", "angle_moon");
+		checkFeature(astralMap.mercury, "enable_mercury", "angle_mercury");
+		checkFeature(astralMap.venus, "enable_venus", "angle_venus");
+		checkFeature(astralMap.mars, "enable_mars", "angle_mars");
+		checkFeature(astralMap.jupiter, "enable_jupiter", "angle_jupiter");
+		checkFeature(astralMap.saturn, "enable_saturn", "angle_saturn");
+		checkFeature(astralMap.uranus, "enable_uranus", "angle_uranus");
+		checkFeature(astralMap.neptune, "enable_neptune", "angle_neptune");
+		checkFeature(astralMap.pluto, "enable_pluto", "angle_pluto");
+		checkFeature(astralMap.lunarnode, "enable_lunarnode", "angle_lunarnode");
+		
+		DrawMaps.reload();
+	}
+	
+	function checkFeature(feature, checkinput, textinput) {
+		if(document.getElementById(checkinput).checked) {
+			feature.enable(parseFloat(document.getElementById(textinput).value));
+		} else {
+			feature.disable();
+		}
+	}
+	
+	//Funcao para habilitar o textinput
+	function handleEnablers(checkbox, textinput) {
+		if(checkbox.checked){
+			document.getElementById(textinput).removeAttribute("disabled");
+		} else {
+			document.getElementById(textinput).setAttribute("disabled", "disabled");
+		}
+	}
+  
+	setTimeout(reload, 500);
+
+  </script>
 
 </body>
-</html> 
+</html>
