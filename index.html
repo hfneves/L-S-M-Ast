@@ -154,17 +154,20 @@
       <ul class="dropdown-menu">
         <li class="active"><a class="hidden-md hidden-lg" href="#mapTab" aria-controls="mapTab" role="tab" data-toggle="tab"> Map</a></li>
 		
-        <li><a role="button" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>	
+        <li><a role="button" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> Instructions</a></li>	
 
-		<li><a role="button" data-target="#panelLocalSpace" aria-haspopup="true"><span class="glyphicon glyphicon-cog"></span> Local Space</a></li>		
+				<li><a role="button" data-target="#panelLocalSpace" aria-haspopup="true"><span class="glyphicon glyphicon-cog"></span> Local Space</a></li>		
 			
         <li><a role="button" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps</a></li>
 			  
-		<li><a role="button" data-target="#panelLegend" aria-haspopup="true"><span class="glyphicon glyphicon-list-alt"></span> Legend</a></li>			  
+				<li><a role="button" data-target="#panelLegend" aria-haspopup="true"><span class="glyphicon glyphicon-list-alt"></span> Legend</a></li>			  
 			  
         <li><a role="button" data-target="#panelSettings" aria-haspopup="true"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
 			  
-        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-fullscreen"></span> Full Map</a></li>
+				<li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-fullscreen"></span> Full Map</a></li>
+				
+				<li><a role="button" data-target="#panelAbout" aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> About</a></li>	
+
       </ul>
     </div>
     <!-- Title -->
@@ -207,21 +210,22 @@
       <div id="headingInfo" class="panel-heading" role="tab">
         <div class="panel-title">
           <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseInfo"  aria-expanded="true" aria-controls="collapseInfo">
-			<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-			<span class="panel-label">About</span></a> 
+					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+					<span class="panel-label">Instructions</span></a> 
           <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelInfo"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
         </div>
       </div>
       <div id="collapseInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingInfo">
         <div class="panel-body" align="justify">
           <p>Este aplicativo deve ser utilizado para o estudo do funcionamento do Mapa do Horizonte na cidade.</p>
-		  <p>Devem ser informados os dados de Latitude e Longitude do local a ser estudado, assim como as direções dos planetas obtidos pelo Mapa do Horizonte em softwares de Astrologia.</p>
-		  <p>Os ângulos devem ser considerados no sentido horário, sendo o Norte como 0º e o Leste como 90º.</p>
-		  
-		  <p style="text-align:center"><img src="Images\compass-wind-rose-bardian.png" width="217" height="196"></p>
-		  
-		  <p>Para inserir os dados entre em "Local Space" no menu lateral esquerdo.</p>
-		  <p>Desenvolvido por Hugo Neves e Paulo Neves.</p>
+		  		<p>Devem ser informados os dados de Latitude e Longitude do local a ser estudado, assim como as direções dos planetas obtidos pelo Mapa do Horizonte em softwares de Astrologia.</p>
+					<p>Os ângulos devem ser considerados no sentido horário, sendo o Norte como 0º e o Leste como 90º.</p>		  
+					<p style="text-align:center"><img src="Images\compass-wind-rose-bardian.png" width="217" height="196"></p>
+					<p>Para inserir os dados entre em "Local Space" no menu lateral esquerdo.</p>
+					<p>Para mais informações sobre o Mapa do Horizonte acesse
+						<a href="http://www.espaco-do-ceu.com.br/o-mapa-do-horizonte-e-suas-direcoes/" target="_blank">"O Mapa do Horizonte e suas Direções"</a>
+						do site Espaço do Céu.
+					</p>
         </div>
      </div>
     </div>
@@ -409,7 +413,7 @@
 
 		</div>
 	  </div>
-	</div>
+	  </div>
 
 	<!-- Basemaps Panel -->
 
@@ -440,12 +444,11 @@
       <div id="headingLegend" class="panel-heading" role="tab">
         <div class="panel-title">
           <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseLegend" aria-expanded="false" aria-controls="collapseLegend">
-			<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span><span class="panel-label">Legend</span></a> 
+			    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span><span class="panel-label">Legend</span></a> 
           <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelLegend"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a> 
         </div>
       </div>
-      <div id="collapseLegend" class="panel-collapse collapse" role="tabpanel" 
-	    aria-labelledby="headingLegend">
+      <div id="collapseLegend" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingLegend">
         <div class="panel-body">            
           <div id="legendDiv"></div>
         </div>
@@ -543,7 +546,26 @@
           </div>
         </div>
       </div>
-    </div>
+		</div>
+		
+    <!-- Panel - About -->
+
+    <div id="panelAbout" class="panel collapse">
+			<div id="headingAbout" class="panel-heading" role="tab">
+				<div class="panel-title">
+					<a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseAbout"  aria-expanded="false" aria-controls="collapseAbout">
+					<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="panel-label">About</span></a> 
+					<a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelAbout"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
+				</div>
+			</div>
+			<div id="collapseAbout" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAbout">
+				<div class="panel-body" align="justify">
+						<p>Este site foi desenvolvido por Hugo Neves e Paulo Neves.</p>
+				</div>
+			</div>
+		</div>
+
+
   </div>
   <!-- /.calcite-panels -->
 
