@@ -5,7 +5,8 @@ function DrawMaps(container, astralMap) {
 	this.astralMap = astralMap;
 	
 	this.ui = ui;
-	this.ui.ready = false;
+  this.ui.ready = false;
+  this.ui.flagPickpoint = false;
 	
 	
     require([
@@ -14,7 +15,7 @@ function DrawMaps(container, astralMap) {
       "esri/views/MapView",
       "esri/views/SceneView",
 	  // Widgets
-	  "esri/widgets/Home",
+      "esri/widgets/Home",
       "esri/widgets/Search",
       "esri/widgets/BasemapGallery",
       "esri/core/watchUtils",
@@ -30,8 +31,7 @@ function DrawMaps(container, astralMap) {
       "bootstrap/Tab",
       // Can use @dojo shim for Array.from for IE11
       "@dojo/framework/shim/array"
-    ], function(Map, MapView, SceneView, Home, Search, Basemaps, watchUtils,
-      CalciteMaps, CalciteMapsArcGIS) {
+    ], function(Map, MapView, SceneView, Home, Search, Basemaps, watchUtils, CalciteMaps, CalciteMapsArcGIS) {
 
       /******************************************************************
        *
@@ -73,7 +73,7 @@ function DrawMaps(container, astralMap) {
         container: container,
         map: ui.map,
         center: [astralMap.longitude, astralMap.latitude],
-		zoom: 12,
+		    zoom: 12,
         //scale: app.scale,
         padding: app.viewPadding,
         ui: {
@@ -125,14 +125,12 @@ function DrawMaps(container, astralMap) {
         view: ui.mapView,
         container: "basemapPanelDiv"
       });
-	  
-
-	
-
 		
 		// Create Coordinates ... 1st 
 		SetCoordinates(ui.mapView);
-		SynchCoordinates(ui.mapView);
+    SynchCoordinates(ui.mapView);
+    PickCoordinates(ui.mapView);
+    
 	  
       /******************************************************************
        *
@@ -191,7 +189,7 @@ function DrawMaps(container, astralMap) {
 		}	
 		//*** Update lat, lon, zoom and scale ***//
 		function showCoordinates(pt, view) {
-			var coords = "Lat/Lon " + pt.latitude.toFixed(7) + " " + pt.longitude.toFixed(7) + 
+			var coords = "Lat.: " + pt.latitude.toFixed(7) + " / Long.: " + pt.longitude.toFixed(7) + 
 				" | Scale 1:" + Math.round(view.scale * 1) / 1 +
 				" | Zoom " +view.zoom;
 			coordsWidget.innerHTML = coords;
@@ -205,9 +203,28 @@ function DrawMaps(container, astralMap) {
 			//*** Add event to show mouse coordinates on click and move ***//
 			view.on(["pointer-down","pointer-move"], function(evt) {
 				showCoordinates(view.toMap({ x: evt.x, y: evt.y }),view);
-			});  
+      });
 		}
-	
+    
+    //
+    function PickCoordinates(view) {
+      view.on("click", function(event) {
+        if (ui.flagPickpoint){
+          // Get the coordinates of the click on the view
+          const Picklat = event.mapPoint.latitude.toFixed(7);
+          const Picklon = event.mapPoint.longitude.toFixed(7);
+          //document.getElementById("latitude").value = Picklat;
+          //view.popup.open({
+          // Set the popup's title to the coordinates of the location
+          //title: "Reverse geocode: [" + lon + ", " + lat + "]",
+          //location: event.mapPoint // Set the location of the popup to the clicked location
+          ui.flagPickpoint = false;
+
+          ui.pickpointCallback(Picklat, Picklon);
+        }
+      });
+    }
+
 	
       // Tab - toggle between map and scene view
       const tabs = Array.from(document.querySelectorAll(
@@ -463,20 +480,26 @@ function DrawMaps(container, astralMap) {
 
 			  // Add the graphic to the view
 			  ui.mapView.graphics.add(polylineGraphic);
-		});
-	}
+    });
+
+
+  }
+
 
 }
 
-DrawMaps.prototype.reload = function()
+DrawMaps.prototype.reload = function(applyzoom)
 {
 	if(!this.ui.ready) {
 		setTimeout(this.reload.bind(this), 500);
 		return;
 	}
 	
-	this.ui.mapView.center = [this.astralMap.longitude, this.astralMap.latitude];
-	this.ui.mapView.zoom = 12;
+  this.ui.mapView.center = [this.astralMap.longitude, this.astralMap.latitude];
+  if (applyzoom){
+    this.ui.mapView.zoom = 12;
+  }
+	
 	
 	this.ui.mapView.graphics.removeAll();
 	
@@ -485,5 +508,19 @@ DrawMaps.prototype.reload = function()
 	}
 	renderPoint();
 }
+
+
+DrawMaps.prototype.pickpoint = function(pickpointCallback)
+{
+
+  this.ui.flagPickpoint = true;
+  this.ui.pickpointCallback = pickpointCallback;
+
+  
+
+  
+  
+}
+
 
 

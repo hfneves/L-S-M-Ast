@@ -244,6 +244,7 @@
       <div id="collapseLocalSpace" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingLocalSpace">
 	
 		<div class="panel-body">
+			<p>Insira os dados de Latitude e Longitude:</p>
 			<div class="panel-customize">
 				<div class="col-xs-4-cust">
 					<label class="Absolute-Vertical-Text">Latitude</label>
@@ -260,8 +261,15 @@
 				<div class="col-xs-5-cust">
 					<input type="number" id="longitude" class="form-control" value="-43.2096"></input>
 				</div>
-			</div>			
-		
+			</div>
+			
+			<div class="panel-customize">
+					<div class="col-xs-5-cust">
+					<button id="titleButton2" type="button" class="btn btn-primary btn-block" onclick="pickpoint()">Pick Point</button>
+					</div>
+			</div>
+
+			<p>Insira os dados do <i>azimute</i> dos planetas e pontos:</p>
 			<div class="panel-customize">
 				<div class="col-xs-1-cust">
 					<input type="checkbox" id="enable_sun" onchange="handleEnablers(this, 'angle_sun')" /></input>
@@ -407,7 +415,7 @@
 			
 			<div class="panel-customize">
 			  <div class="col-xs-5-cust">
-				<button id="titleButton" type="button" class="btn btn-primary btn-block" onclick="reload()">Apply</button>
+				<button id="titleButton" type="button" class="btn btn-primary btn-block" onclick="reload(true)">Apply</button>
 			  </div>
 			</div>
 
@@ -450,7 +458,37 @@
       </div>
       <div id="collapseLegend" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingLegend">
         <div class="panel-body">            
-          <div id="legendDiv"></div>
+          <div id="legendDiv">
+						<p>Legenda de cores dos planetas e pontos:</p>
+						<div class="panel-customize" 	style="height:260px">
+							<div class="col-xs-1-cust">
+								<p style="color:rgb(255,153,0)">▬</p>    
+								<p style="color:rgb(51,204,255)">▬</p>   
+								<p style="color:rgb(0,153,0)">▬</p>   
+								<p style="color:rgb(255,102,255)">▬</p>    
+								<p style="color:rgb(255,0,0)">▬</p>   
+								<p style="color:rgb(153,51,153)">▬</p>    
+								<p style="color:rgb(0,0,1)">▬</p>   
+								<p style="color:rgb(0,153,153)">▬</p>  
+								<p style="color:rgb(51,51,204)">▬</p> 
+								<p style="color:rgb(102,51,0)">▬</p>  
+								<p style="color:rgb(179,179,0)">▬</p>  
+							</div> 
+							<div class="col-xs-4-cust">
+									<p>Sol</p>  
+									<p>Lua</p> 
+									<p>Mercúrio</p>
+									<p>Vênus</p>  
+									<p>Marte</p>   
+									<p>Júpiter</p>  
+									<p>Satruno</p> 
+									<p>Urano</p>   
+									<p>Netuno</p>  
+									<p>Plutão</p>   
+									<p>Nodos Lunares</p>  
+							</div> 
+						</div>
+					</div>
         </div>
       </div>
     </div>
@@ -586,7 +624,7 @@
 	//var mapManager = new MapManager("mapViewDiv", astralMap);
 	
 	
-	function reload() {
+	function reload(applyzoom) {
 		astralMap.latitude = parseFloat(document.getElementById("latitude").value);
 		astralMap.longitude = parseFloat(document.getElementById("longitude").value);
 		
@@ -602,7 +640,7 @@
 		checkFeature(astralMap.pluto, "enable_pluto", "angle_pluto");
 		checkFeature(astralMap.lunarnode, "enable_lunarnode", "angle_lunarnode");
 		
-		DrawMaps.reload();
+		DrawMaps.reload(applyzoom);
 	}
 	
 	function checkFeature(feature, checkinput, textinput) {
@@ -621,8 +659,22 @@
 			document.getElementById(textinput).setAttribute("disabled", "disabled");
 		}
 	}
-  
-	setTimeout(reload, 500);
+
+  //Funcao para pegar ponto de latitude e longitude
+	function pickpoint() {
+
+		document.getElementById("mapViewDiv").style.cursor = "crosshair";
+
+  	DrawMaps.pickpoint(function(lat, long) {
+			document.getElementById("mapViewDiv").style.cursor = "default";
+			document.getElementById("latitude").value = lat;
+			document.getElementById("longitude").value = long;
+			reload(false);
+		});
+
+	}
+
+	reload(true);
 
   </script>
 
