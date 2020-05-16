@@ -42,7 +42,8 @@ function DrawMaps(container, astralMap) {
       app = {
         center: [-10, -10],
         scale: 50000000,
-        basemap: "topo-vector",
+        basemap: "streets-navigation-vector",
+        //basemap: "topo-vector",
         viewPadding: {
           top: 50,
           bottom: 0
@@ -65,7 +66,8 @@ function DrawMaps(container, astralMap) {
 	   
       // Map
       ui.map = new Map({
-        basemap: "topo-vector"
+        basemap: "streets-navigation-vector"
+        //basemap: "topo-vector"
       });
 
       // 2D view
