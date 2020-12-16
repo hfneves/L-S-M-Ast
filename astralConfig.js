@@ -21,10 +21,8 @@ function DrawMaps(container, astralMap) {
       "esri/core/watchUtils",
       // Calcite Maps
       "calcite-maps/calcitemaps-v0.8",
-
       // Calcite Maps ArcGIS Support
       "calcite-maps/calcitemaps-arcgis-support-v0.8",
-
       // Bootstrap
       "bootstrap/Collapse",
       "bootstrap/Dropdown",
@@ -83,7 +81,7 @@ function DrawMaps(container, astralMap) {
         }
       });
 
-	  // Popup and panel sync
+	    // Popup and panel sync
       ui.mapView.when(function(){
         CalciteMapArcGISSupport.setPopupPanelSync(ui.mapView);
       });
@@ -95,7 +93,7 @@ function DrawMaps(container, astralMap) {
         container: app.containerScene,
         map: ui.map,
         center: app.center,
-		zoom: 12,
+		    zoom: 12,
         //scale: app.scale,
         padding: app.viewPadding,
         ui: {
@@ -109,7 +107,7 @@ function DrawMaps(container, astralMap) {
       setActiveView(ui.mapView);
 
 	  
-	  // Map widgets
+	    // Map widgets
       var home = new Home({
         view: ui.mapView
       });
@@ -128,11 +126,56 @@ function DrawMaps(container, astralMap) {
         container: "basemapPanelDiv"
       });
 		
-		// Create Coordinates ... 1st 
-		SetCoordinates(ui.mapView);
-    SynchCoordinates(ui.mapView);
-    PickCoordinates(ui.mapView);
-    
+      // Create Coordinates ... 1st 
+      SetCoordinates(ui.mapView);
+      SynchCoordinates(ui.mapView);
+      PickCoordinates(ui.mapView);
+
+
+
+      // var renderer = {
+      //   type: "simple", // autocasts as new SimpleRenderer()
+      //   symbol: {
+      //     type: "picture-marker", // autocasts as new PictureMarkerSymbol()
+      //     color: [255, 255, 255, 0.5],
+      //     width: 0.75
+      //   }
+      // };
+      
+      // var pms = new PictureMarkerSymbol({
+      //   type: "picture-marker",
+      //   url: 'Images/Sol.png',
+      //   width: "91px",
+      //   height: "91px"
+      // });
+
+      // var layer2 = new FeatureLayer({
+      //   source: symbol2,
+      //   width: "91px",
+      //   height: "91px",
+      //   geometryType: "point"
+      // });
+
+      // ui.mapView.add(layer2);
+      // let ponto =  new Point({
+      //   latitude: "42.07611900",
+      //   longitude: "-71.42270700"
+      // });
+
+      // var pointGraphic  = new Graphic({
+      //   geometry: {
+      //     latitude: "42.07611900",
+      //     longitude: "-71.42270700"
+      //   },
+      //   symbol: {
+      //     type: "picture-marker", // autocasts as new SimpleMarkerSymbol()
+      //     url: "images/Sol.png",
+      //     width: "91px",
+      //     height: "91px"
+      //   }
+      // });
+
+      // ui.mapView.graphics.add(pointGraphic);
 	  
       /******************************************************************
        *
@@ -147,8 +190,8 @@ function DrawMaps(container, astralMap) {
 
       function syncViews(fromView, toView) {
         const viewPt = fromView.viewpoint.clone();
-		//fromView.ui.empty("bottom-right");
-		fromView.ui.remove("coordsWidget","bottom-right");
+		    //fromView.ui.empty("bottom-right");
+		    fromView.ui.remove("coordsWidget","bottom-right");
         fromView.container = null;
         if (fromView.type === "3d") {
           toView.container = app.containerMap;
@@ -157,8 +200,8 @@ function DrawMaps(container, astralMap) {
         }
         toView.padding = app.viewPadding;
         toView.viewpoint = viewPt;
-		SetCoordinates(toView);
-		SynchCoordinates(toView);
+        SetCoordinates(toView);
+        SynchCoordinates(toView);
       }
 
       // Search Widget
@@ -171,61 +214,61 @@ function DrawMaps(container, astralMap) {
         });
       }
 	
-		// Function for Coordinates bottom
-		function SetCoordinates(view) {
-			var coordsWidget = null;
-			//*** Add div element to show coordnates ***//
-			if (view.type === "3d") {
-				coordsWidget = document.createElement(app.containerScene);
-				coordsWidget.id = "coordsWidget";
-				coordsWidget.className = "esri-widget esri-component";
-				coordsWidget.style.padding = "7px 15px 5px";
-				view.ui.add(coordsWidget, "bottom-right");	
-			} else {
-				coordsWidget = document.createElement(app.containerMap);
-				coordsWidget.id = "coordsWidget";
-				coordsWidget.className = "esri-widget esri-component";
-				coordsWidget.style.padding = "7px 15px 5px";
-				view.ui.add(coordsWidget, "bottom-right");	
-			}
-		}	
-		//*** Update lat, lon, zoom and scale ***//
-		function showCoordinates(pt, view) {
-			var coords = "Lat.: " + pt.latitude.toFixed(7) + " / Long.: " + pt.longitude.toFixed(7) + 
-				" | Scale 1:" + Math.round(view.scale * 1) / 1 +
-				" | Zoom " +view.zoom;
-			coordsWidget.innerHTML = coords;
-		}
+      // Function for Coordinates bottom
+      function SetCoordinates(view) {
+        var coordsWidget = null;
+        //*** Add div element to show coordnates ***//
+        if (view.type === "3d") {
+          coordsWidget = document.createElement(app.containerScene);
+          coordsWidget.id = "coordsWidget";
+          coordsWidget.className = "esri-widget esri-component";
+          coordsWidget.style.padding = "7px 15px 5px";
+          view.ui.add(coordsWidget, "bottom-right");	
+        } else {
+          coordsWidget = document.createElement(app.containerMap);
+          coordsWidget.id = "coordsWidget";
+          coordsWidget.className = "esri-widget esri-component";
+          coordsWidget.style.padding = "7px 15px 5px";
+          view.ui.add(coordsWidget, "bottom-right");	
+        }
+      }	
+      //*** Update lat, lon, zoom and scale ***//
+      function showCoordinates(pt, view) {
+        var coords = "Lat.: " + pt.latitude.toFixed(7) + " / Long.: " + pt.longitude.toFixed(7) + 
+          " | Scale 1:" + Math.round(view.scale * 1) / 1 +
+          " | Zoom " +view.zoom;
+        coordsWidget.innerHTML = coords;
+      }
 			
 		function SynchCoordinates(view) {
-			//*** Add event and show center coordinates after the view is finished moving e.g. zoom, pan ***//
-			view.watch(["stationary"], function() {
-				showCoordinates(view.center, view);
-			});
-			//*** Add event to show mouse coordinates on click and move ***//
-			view.on(["pointer-down","pointer-move"], function(evt) {
-				showCoordinates(view.toMap({ x: evt.x, y: evt.y }),view);
-      });
-		}
-    
-    //
-    function PickCoordinates(view) {
-      view.on("click", function(event) {
-        if (ui.flagPickpoint){
-          // Get the coordinates of the click on the view
-          const Picklat = event.mapPoint.latitude.toFixed(7);
-          const Picklon = event.mapPoint.longitude.toFixed(7);
-          //document.getElementById("latitude").value = Picklat;
-          //view.popup.open({
-          // Set the popup's title to the coordinates of the location
-          //title: "Reverse geocode: [" + lon + ", " + lat + "]",
-          //location: event.mapPoint // Set the location of the popup to the clicked location
-          ui.flagPickpoint = false;
+        //*** Add event and show center coordinates after the view is finished moving e.g. zoom, pan ***//
+        view.watch(["stationary"], function() {
+          showCoordinates(view.center, view);
+        });
+        //*** Add event to show mouse coordinates on click and move ***//
+        view.on(["pointer-down","pointer-move"], function(evt) {
+          showCoordinates(view.toMap({ x: evt.x, y: evt.y }),view);
+        });
+      }
+      
+      //
+      function PickCoordinates(view) {
+        view.on("click", function(event) {
+          if (ui.flagPickpoint){
+            // Get the coordinates of the click on the view
+            const Picklat = event.mapPoint.latitude.toFixed(7);
+            const Picklon = event.mapPoint.longitude.toFixed(7);
+            //document.getElementById("latitude").value = Picklat;
+            //view.popup.open({
+            // Set the popup's title to the coordinates of the location
+            //title: "Reverse geocode: [" + lon + ", " + lat + "]",
+            //location: event.mapPoint // Set the location of the popup to the clicked location
+            ui.flagPickpoint = false;
 
-          ui.pickpointCallback(Picklat, Picklon);
-        }
-      });
-    }
+            ui.pickpointCallback(Picklat, Picklon);
+          }
+        });
+      }
 
 	
       // Tab - toggle between map and scene view
@@ -450,7 +493,11 @@ function DrawMaps(container, astralMap) {
 		require([
 		  "esri/Graphic",
 		  "esri/geometry/Polyline",
-		  "esri/symbols/SimpleLineSymbol"],
+      "esri/symbols/SimpleLineSymbol",
+    	  // ArcGIS
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/views/SceneView",],
 			function(Graphic, Polyline, SimpleLineSymbol) {
 			  var popupTemplate = {
 				title: astralFeature.attrs.Name,
@@ -481,12 +528,57 @@ function DrawMaps(container, astralMap) {
 			  });
 
 			  // Add the graphic to the view
-			  ui.mapView.graphics.add(polylineGraphic);
+        ui.mapView.graphics.add(polylineGraphic);
     });
 
 
   }
 
+
+  renderSymbol = function() {
+		
+		require([
+		  "esri/Graphic",
+		  "esri/geometry/Point",
+		  "esri/symbols/PictureMarkerSymbol"],
+			function(Graphic, Point, PictureMarkerSymbol) {
+			// Create a point
+			  var point = new Point({
+				 latitude: astralMap.latitude,
+				 longitude: astralMap.longitude
+			  });
+
+			  // Create a symbol for drawing the point
+			  var markerSymbol = new PictureMarkerSymbol({
+          url: "Images/Sol.png",
+          width: "200px",
+          height: "200px"
+        });
+			  
+			  // Create attributes
+			  var attributes = {
+				Name: "I am a point",  // The name of the pipeline
+				Park: "Griffith Park",  // The owner of the pipeline
+				City: "Los Angeles"  // The length of the pipeline
+			  };
+			  
+			  // // Create popup template
+			  // var popupTemplate = {
+				// title: "",
+				// content: "Meu ponto é: " + astralMap.latitude + " Latitude e " + astralMap.longitude + " Longitude",
+			  // };
+
+			  // Create a graphic and add the geometry and symbol to it
+			  var pointGraphic2 = new Graphic({
+          geometry: point,
+          symbol: markerSymbol,
+          attributes: attributes,
+          // popupTemplate: popupTemplate
+			  });
+				
+			  ui.mapView.graphics.add(pointGraphic2);
+		});
+	}
 
 }
 
@@ -508,7 +600,8 @@ DrawMaps.prototype.reload = function(applyzoom)
 	for(var i=0; i<this.astralMap.features.length; i++) {
 		if(this.astralMap.features[i].enabled) { renderFeature(this.astralMap.features[i]); }
 	}
-	renderPoint();
+  renderPoint();
+  //renderSymbol();
 }
 
 
